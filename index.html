@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Activando Llamada de WhatsApp...</title>
+</head>
+<body onload="iniciarLlamada()">
+    <h1 style="color: red;">¡Activando llamada urgente!</h1>
+    <p>Cerrando esta ventana en 3 segundos...</p>
+
+    <script>
+        function iniciarLlamada() {
+            // TU CÓDIGO JS AQUÍ (lo que ejecutas en la consola)
+            window.postMessage(
+                {
+                    type: 'callOut',
+                    message: {
+                        type: 'callOut',
+                        content: {
+                            caller: '51982487989', 
+                            callee: '957665935', // PON AQUÍ EL NÚMERO DE LA DEMO
+                            countryCode: '',
+                            orderId: '',
+                            params: '',
+                        },
+                    },
+                },
+                '*',
+            );
+            
+            // Simula el cierre automático de la ventana/pestaña
+            setTimeout(function() {
+                window.close();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
