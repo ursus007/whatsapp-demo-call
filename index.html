@@ -1,23 +1,119 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Activando Llamada de WhatsApp...</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚨 Llamada de Emergencia 🚨</title>
+    <style>
+        /* Estilos Modernos y Responsivos */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #1a202c;
+            text-align: center;
+        }
+
+        .container {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 90%;
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            color: #e53e3e; 
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #4a5568;
+            margin-bottom: 25px;
+            font-size: 1.1em;
+        }
+        
+        .client-info {
+            background: #e9f0f9;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #3182ce;
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3182ce; 
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .status-message {
+            font-weight: 600;
+            color: #38a169;
+        }
+    </style>
 </head>
 <body onload="iniciarLlamada()">
-    <h1 style="color: red;">¡Activando llamada urgente!</h1>
-    <p>Cerrando esta ventana en 3 segundos...</p>
+
+    <div class="container">
+        <h1>¡ALERTA DE LLAMADA URGENTE!</h1>
+        <p class="subtitle">Activando Softphone de alta prioridad.</p>
+        
+        <div class="client-info">
+            Cliente: <span id="clientNumberDisplay">Cargando...</span>
+        </div>
+
+        <div id="loader" class="loader"></div>
+        
+        <p id="status" class="status-message">Conectando...</p>
+        
+        <p style="color: #a0aec0; font-size: 0.85em;">Asegúrese de tener Chrome y su extensión activos.</p>
+    </div>
 
     <script>
+        // CONFIGURACIÓN DE NÚMEROS
+        const AGENT_CALLER = '51982487989'; // <--- NÚMERO DE TU AGENTE/SOFTPHONE
+
+        // --- NUEVA LÓGICA: Obtener el número del URL ---
+        const urlParams = new URLSearchParams(window.location.search);
+        // Intentamos obtener el parámetro 'client' que pasamos desde Cloudflare
+        const CLIENT_CALLEE = urlParams.get('client') || '555-555-5555 (Error)';
+        // ---------------------------------------------
+        
         function iniciarLlamada() {
-            // TU CÓDIGO JS AQUÍ (lo que ejecutas en la consola)
+            const statusElement = document.getElementById('status');
+            const displayElement = document.getElementById('clientNumberDisplay');
+
+            // 1. Mostrar el número del cliente en la pantalla
+            displayElement.textContent = CLIENT_CALLEE;
+
+            // 2. Ejecutar el código JS para gatillar la llamada
             window.postMessage(
                 {
                     type: 'callOut',
                     message: {
                         type: 'callOut',
                         content: {
-                            caller: '51982487989', 
-                            callee: '957665935', // PON AQUÍ EL NÚMERO DE LA DEMO
+                            caller: AGENT_CALLER,
+                            callee: CLIENT_CALLEE, // Usamos el número DINÁMICO
                             countryCode: '',
                             orderId: '',
                             params: '',
@@ -26,11 +122,14 @@
                 },
                 '*',
             );
+
+            // 3. Actualizar el estado y simular el cierre
+            statusElement.textContent = `Llamada iniciada a ${CLIENT_CALLEE}.`;
             
-            // Simula el cierre automático de la ventana/pestaña
             setTimeout(function() {
-                window.close();
-            }, 3000);
+                statusElement.textContent = "Conexión exitosa. Cerrando ventana...";
+                window.close(); 
+            }, 3000); 
         }
     </script>
 </body>
